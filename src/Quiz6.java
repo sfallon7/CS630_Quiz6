@@ -12,6 +12,8 @@ public class Quiz6 {
         public int arrival;
         public int tickCount = 0;
         public int completionTime = 0;
+        public int originalBurstTime;
+
         public Process(String pid, int priority, int burstTime, int pNum){
             this.pid = pid;
             this.priority = priority;
@@ -31,6 +33,7 @@ public class Quiz6 {
             this.type = 'A';
             this.priority = 2;
             this.burstTime = 10;
+            this.originalBurstTime = 10;
         }
         public ProcessA(int arrivalTime, String pid) {
             this.type = 'A';
@@ -38,6 +41,7 @@ public class Quiz6 {
             this.pid = pid;
             this.priority = 2;
             this.burstTime = 10;
+            this.originalBurstTime = 10;
         }
         @Override
         public Process spawnProcess(int arrivalTime , String pid) {
@@ -49,6 +53,7 @@ public class Quiz6 {
             this.type = 'B';
             this.priority = 3;
             this.burstTime = 7;
+            this.originalBurstTime = 7;
         }
         public ProcessB(int arrivalTime, String pid) {
             this.type = 'B';
@@ -56,6 +61,7 @@ public class Quiz6 {
             this.burstTime = 7;
             this.arrival = arrivalTime;
             this.pid = pid;
+            this.originalBurstTime = 7;
         }
         @Override
         public Process spawnProcess(int arrivalTime , String pid) {
@@ -67,6 +73,7 @@ public class Quiz6 {
             this.priority = 1;
             this.burstTime = 5;
             this.type = 'C';
+            this.originalBurstTime = 5;
         }
         public ProcessC(int arrivalTime, String pid) {
             this.type = 'C';
@@ -74,6 +81,7 @@ public class Quiz6 {
             this.burstTime = 5;
             this.arrival = arrivalTime;
             this.pid = pid;
+            this.originalBurstTime = 5;
         }
     }
 
@@ -120,32 +128,29 @@ public class Quiz6 {
         Process proc2B = new ProcessB(0, "P2");
 
         // Instantiate Priority Queue
-        PriorityQueue<Process> priQueue = new PriorityQueue<Process>(1 , new ProcessComparator());
+        PriorityQueue<Process> priQueue = new PriorityQueue<Process>(2 , new ProcessComparator());
         priQueue.add(proc1A);
         priQueue.add(proc2B);
         while(!priQueue.isEmpty()) {
             Process p = priQueue.remove();
             int runningTime = p.burstTime >= TQ ? TQ : p.burstTime;
             for (int i = 1; i <= runningTime; i++){
-                timePassed += i;
-                if (i%3 == 0) {
-                    Process newProcess = p.spawnProcess(timePassed, "p" + Integer.toString(processCount));
+                if (%3 == 0) {
+                    Process newProcess = p.spawnProcess(timePassed, "P" + Integer.toString(processCount + 1));
                     if(newProcess != null)
                     {
                         processCount++;
                         priQueue.add(newProcess);
+                        System.out.println( p.pid + " Created " + newProcess.pid + " at " + timePassed);
                     }
                 }
-                if (timePassed%3 == 0){
-                    
-                    //add signal count
-                }
+                timePassed += 1;
+                p.burstTime -= 1;
             }
-            p.burstTime -= runningTime;
             if (p.burstTime > 0){
                 priQueue.add(p);
             }
-            System.out.println(" " + p.pid + " " + " " + p.type);
+            System.out.println(" " + p.pid + " " + " " + p.type + " " + p.burstTime);
         }
         // while(!priQueue.isEmpty()) {
         //     Process currentProcess = priQueue.peek();
